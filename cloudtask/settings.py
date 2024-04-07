@@ -18,24 +18,21 @@ from django.core.signals import setting_changed
 from django.utils.module_loading import import_string
 
 DEFAULTS = {
-    'DEFAULT_CLIENT_CLASS': 'cloudtask.client.BaseTaskClient',
-    'DEFAULT_AUTHENTICATION_CLASS ': 'cloudtask.client.BaseAuthenticationClass',
-
-    'DEFAULT_QUOTE_ID': None,
-    'DEFAULT_QUOTE_LOCATION': None,
-
-    'DEFAULT_TASK_HANDLER_ROOT_URL': '',
-    'DEFAULT_TASK_RATE_LIMIT':  10,
-    'DEFAULT_TASK_RATE_INTERVAL':  1,
-
-    'DEFAULT_TASK_EXECUTE_LOCALLY': False
+    "DEFAULT_CLIENT_CLASS": "cloudtask.client.BaseTaskClient",
+    "DEFAULT_AUTHENTICATION_CLASS ": "cloudtask.client.BaseAuthenticationClass",
+    "DEFAULT_QUOTE_ID": None,
+    "DEFAULT_QUOTE_LOCATION": None,
+    "DEFAULT_TASK_HANDLER_ROOT_URL": "",
+    "DEFAULT_TASK_RATE_LIMIT": 10,
+    "DEFAULT_TASK_RATE_INTERVAL": 1,
+    "DEFAULT_TASK_EXECUTE_LOCALLY": False,
 }
 
 
 # List of settings that may be in string import notation.
 IMPORT_STRINGS = [
-    'DEFAULT_RENDERER_CLASSES',
-    'DEFAULT_PARSER_CLASSES',
+    "DEFAULT_RENDERER_CLASSES",
+    "DEFAULT_PARSER_CLASSES",
 ]
 
 
@@ -60,7 +57,12 @@ def import_from_string(val, setting_name):
     try:
         return import_string(val)
     except ImportError as e:
-        msg = "Could not import '%s' for Task setting '%s'. %s: %s." % (val, setting_name, e.__class__.__name__, e)
+        msg = "Could not import '%s' for Task setting '%s'. %s: %s." % (
+            val,
+            setting_name,
+            e.__class__.__name__,
+            e,
+        )
         raise ImportError(msg)
 
 
@@ -80,6 +82,7 @@ class TaskSettings:
     under the Cloud task name. It is not intended to be used by 3rd-party
     apps, and test helpers like `override_settings` may not work as expected.
     """
+
     def __init__(self, defaults=None, import_strings=None):
         self._user_settings = {}
         self.defaults = defaults or DEFAULTS
@@ -88,8 +91,8 @@ class TaskSettings:
 
     @property
     def user_settings(self):
-        if not hasattr(self, '_user_settings'):
-            self._user_settings = getattr(settings, 'REST_FRAMEWORK', {})
+        if not hasattr(self, "_user_settings"):
+            self._user_settings = getattr(settings, "REST_FRAMEWORK", {})
         return self._user_settings
 
     def __getattr__(self, attr):
@@ -116,16 +119,16 @@ class TaskSettings:
         for attr in self._cached_attrs:
             delattr(self, attr)
         self._cached_attrs.clear()
-        if hasattr(self, '_user_settings'):
-            delattr(self, '_user_settings')
+        if hasattr(self, "_user_settings"):
+            delattr(self, "_user_settings")
 
 
 task_settings = TaskSettings(defaults=DEFAULTS, import_strings=IMPORT_STRINGS)
 
 
 def reload_task_settings(*args, **kwargs):
-    setting = kwargs['setting']
-    if setting == 'CLOUD_TASK':
+    setting = kwargs["setting"]
+    if setting == "CLOUD_TASK":
         task_settings.reload()
 
 
