@@ -8,4 +8,3 @@ Integrate your [Django](https://www.djangoproject.com/) application with Google 
 * Automatically route all tasks from a single endpoint
 * Ease scheduling with native python datetime
 * Named task to avoid duplicated
-* Local development support with Redis Queue
